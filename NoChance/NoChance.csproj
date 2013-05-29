@@ -64,8 +64,8 @@
     <Content Include="images\StartButton.png" />
     <Content Include="images\Title.png" />
     <Content Include="index.html" />
-    <Content Include="js\CreateJS\easeljs-0.5.0.min.js" />
-    <Content Include="js\CreateJS\preloadjs-0.2.0.min.js" />
+    <Content Include="js\CreateJS\easeljs-0.6.1.min.js" />
+    <Content Include="js\CreateJS\preloadjs-0.3.1.min.js" />
     <Content Include="js\game.js" />
     <Content Include="Web.config" />
   </ItemGroup>

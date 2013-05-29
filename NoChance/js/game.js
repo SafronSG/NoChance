@@ -10,81 +10,112 @@
     var scaleW = window.innerWidth / 1280;
     var scaleH = window.innerHeight / 768;
 
-    var preload;
+    var loader;
+    var assets;
     var canvas, context, stage;
     var titleImage, titleBitmap;
     var startButtonImage, startButtonBitmap;
     var hallWay;
 
     function initialize() {
-	canvas = document.getElementById("canvas");
+	    canvas = document.getElementById("canvas");
         canvas.width = window.innerWidth - 30;
         canvas.height = window.innerHeight - 30;
         context = canvas.getContext("2d");
 
-	stage = new createjs.Stage(canvas);
+	    stage = new createjs.Stage(canvas);
+	    assets = [];
+	    var manifest = [
+                { id: "playerRun", src: "images/PlayerRun.png" },
+                { id: "playerJump", src: "images/PlayerJump.png" },
+	            { id: "startButton", src: "images/StartButton.png" },
+	            { id: "hallWay", src: "images/HallWay.png" },
+                { id: "title", src: "images/Title.png" }
+            ];
 
-	preload = new createjs.PreloadJS();
-        preload.onComplete = prepareGame;
+	    loader = new createjs.LoadQueue(false);
+	    loader.onComplete = handleComplete;
+	    loader.onFileLoad = handleFileLoad;
+	    loader.loadManifest(manifest);
+	    stage.autoClear = false;
 
-	var manifest = [
-            { id: "playerRun", src: "images/PlayerRun.png" },
-            { id: "playerJump", src: "images/PlayerJump.png" },
-	        { id: "startButton", src: "images/StartButton.png" },
-	        { id: "hallWay", src: "images/HallWay.png" },
-            { id: "title", src: "images/Title.png" }
-        ];
-
-        preload.loadManifest(manifest);
+	    
         
     }
-
-    function prepareGame() {
     
-        hallWay = new createjs.Shape();
-        var g = hallWay.graphics;
-        g.beginBitmapFill(preload.getResult("hallWay").result);
-        g.drawRect(0, 0, canvas.width + 330, 300);
-        hallWay.y = 200;
-        stage.addChild(hallWay);
+    function handleFileLoad(event) {
+        assets.push(event.item);
+    }
 
-	    titleImage = preload.getResult("title").result;
-        titleBitmap = new createjs.Bitmap(titleImage);
-        titleBitmap.y = 20;
-        titleBitmap.x = canvas.width / 2 - 277;
-        stage.addChild(titleBitmap);
-
-	    startButtonImage = preload.getResult("startButton").result;
-        startButtonBitmap = new createjs.Bitmap(startButtonImage);
-        startButtonBitmap.y = canvas.height - 100;
-        startButtonBitmap.x = canvas.width / 2 - 107;
-        stage.addChild(startButtonBitmap);
-
-        //debugText
-        var txt = new createjs.Text(window.innerWidth + ":" + window.innerHeight, "15px Arial", "#000");
+    function handleComplete() {
+    
+        var txt = new createjs.Text(assets.length, "15px Arial", "#000");
         txt.y = 150;
         stage.addChild(txt);
+
+        stage.update();
+        for (var i = 0; i < assets.length; i++) {
+            
+            var item = assets[i];
+            var id = item.id;
+            var result = loader.getResult(id);
+
+            if (item.type == createjs.LoadQueue.IMAGE) {
+                var bmp = new createjs.Bitmap(result);
+            }
+
+            switch (id) {
+                case "title":
+                    titleImage = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0, 0, 553, 110));
+                    titleImage.y = 20;
+                    titleImage.x = canvas.width / 2 - 277;
+                    break;
+                case "hallWay":
+                    hallWay = new createjs.Shape();
+                    var g = hallWay.graphics;
+                    g.beginBitmapFill(result);
+                    g.drawRect(0, 0, canvas.width + 330, 300);
+                    hallWay.y = 200;
+                    break;
+                case "startButton":
+                    startButtonImage = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0, 0, 213, 72));
+                    startButtonImage.y = canvas.height - 100;
+                    startButtonImage.x = canvas.width / 2 - 107;
+                    break;
+                case "hill2":
+                    hill2 = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0, 0, 212, 50));
+                    hill2.x = Math.random() * w;
+                    hill2.scaleX = hill2.scaleY = 3;
+                    hill2.y = 171;
+                    break;
+            }
+        }
+
+        stage.addChild(startButtonImage, titleImage, hallWay);
+
+        stage.update();
+        //stage.addEventListener("stagemousedown", handleJumpStart);
+        //canvas.onclick = handleClick;
+        //createjs.Ticker.setFPS(40);
+        //createjs.Ticker.addEventListener("tick", tick);
         
-        stage.update();
-
-        startGame();
+        
     }
 
-    function startGame() {
-        createjs.Ticker.setInterval(window.requestAnimationFrame);
-        createjs.Ticker.addListener(gameLoop);
+    function handleClick() {
+        //prevent extra clicks and hide text
+        canvas.onclick = null;
+
+    }
+    function handleJumpStart() {
     }
 
-    function gameLoop() {
-        update();
-        draw();
-    }
+    function tick(event) {
+        
+        var outside = w + 20;
 
-    function update() {
-       stage.update();
-    }
-
-    function draw() {
-        stage.update();
+        hallWay.x = (hallWay.x - 15) % 330;
+        
+        update(event);
     }
 })();
