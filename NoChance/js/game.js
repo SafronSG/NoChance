@@ -9,15 +9,18 @@
     // THE GAME
     var scaleW = window.innerWidth / 1280;
     var scaleH = window.innerHeight / 768;
-
+    var STONE_TIME = 100;		//ticks between bullets
     var loader;
     var assets;
     var canvas, context, stage;
-    var titleImage, titleBitmap;
-    var startButtonImage, startButtonBitmap;
+    var titleImage;
+    var startButtonImage;
+    var stoneImage;
+    var stoneImage2;
     var hallWay;
     var player;
-    var runningRate = 2.5;
+    var nextStone = STONE_TIME;
+    
 
     function initialize() {
 	    canvas = document.getElementById("canvas");
@@ -31,8 +34,9 @@
                 { id: "playerRun", src: "images/runningGrant.png" },
 	            { id: "startButton", src: "images/StartButton.png" },
 	            { id: "hallWay", src: "images/HallWay.png" },
-	            { id: "hallWay", src: "images/HallWay.png" },
+	            { id: "stone", src: "images/Stone.png" },
                 { id: "title", src: "images/Title.png" }
+        
             ];
 
 	    loader = new createjs.LoadQueue(false);
@@ -59,7 +63,7 @@
         // Set up looping
         ss.getAnimation("run").next = "run";
         ss.getAnimation("jump").next = "run";
-        //player.gotoAndPlay("run");
+        player.gotoAndPlay("run");
 
 
         // Position the Grant sprite
@@ -80,9 +84,9 @@
 
             switch (id) {
                 case "title":
-                    titleImage = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0, 0, 553, 110));
+                    titleImage = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0, 0, 405, 110));
                     titleImage.y = 20;
-                    titleImage.x = canvas.width / 2 - 277;
+                    titleImage.x = canvas.width / 2 - 202;
                     break;
                 case "hallWay":
                     hallWay = new createjs.Shape();
@@ -96,10 +100,20 @@
                     startButtonImage.y = canvas.height - 100;
                     startButtonImage.x = canvas.width / 2 - 107;
                     break;
+                case "stone":
+                    stoneImage = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0, 0, 80, 80));
+                    stoneImage.y = 410;
+                    stoneImage.x = canvas.width + 10;
+                    stoneImage.scaleX = stoneImage.scaleY = 0.5;
+                    stoneImage2 = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0, 0, 80, 80));
+                    stoneImage2.y = 410;
+                    stoneImage2.x = canvas.width + 10;
+                    stoneImage2.scaleX = stoneImage2.scaleY = 0.5;
+                    break;
             }
         }
 
-        stage.addChild(startButtonImage, titleImage, hallWay, player);
+        stage.addChild(startButtonImage, titleImage, hallWay, player, stoneImage, stoneImage2);
 
         
         stage.addEventListener("stagemousedown", handleJumpStart);
@@ -108,7 +122,7 @@
         if (!createjs.Ticker.hasEventListener("tick")) {
             createjs.Ticker.addEventListener("tick", tick);
         }
-        
+        createjs.Ticker.setPaused(true);
         stage.update();
     }
     
@@ -117,8 +131,31 @@
     }
 
     function tick() {
-        //hallWay.x = (hallWay.x - 10) % 330;
+        //handle firing
+        if (nextStone <= 0) {
+            nextStone = STONE_TIME;
+            addStones();
+        } else {
+            nextStone--;
+        }
+
+        hallWay.x = (hallWay.x - 10) % 330;
         
         stage.update();
+    }
+
+    function addStones() {
+        var tmp = getRandomInt(1, 2)
+        switch (tmp) {
+            case 1:
+                
+                break;
+            case 2:
+                break;
+        }
+    }
+    
+    function getRandomInt () {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 })();
