@@ -21,7 +21,7 @@
     var player;
     var startJump = false;
     var jumping = 15;
-    
+    var isPlayiung = false;
 
     function initialize() {
 	    canvas = document.getElementById("canvas");
@@ -128,17 +128,24 @@
     }
     
     function handleJumpStart() {
-        startJump = true;
+        if (isPlayiung)
+            startJump = true;
+        else {
+            startButtonImage.y = -100;
+            stage.update();
+            isPlayiung = true;
+        }
     }
 
     function tick() {
 
         hallWay.x = (hallWay.x - 10) % 330;
-
-        stoneImage.x = stoneImage.x - 10;
-        stoneImage2.x = stoneImage2.x - 10;
+        if (isPlayiung) {
+            stoneImage.x = stoneImage.x - 10;
+            stoneImage2.x = stoneImage2.x - 10;
+        }
         if (stoneImage2.x < -40) {
-            addstones(2);
+            addstones();
         }
         if (startJump) {
             if (jumping > 0) {
@@ -157,7 +164,8 @@
         stage.update();
     }
     
-    function addstones(id) {
+    function addstones() {
+        var id = getRandomInt(1, 2);
         switch (id) {
             case 1:
                 stoneImage.x = stoneImage2.x = canvas.width + 10;
@@ -166,12 +174,16 @@
                 stoneImage.x = canvas.width + 10;
                 stoneImage2.x = canvas.width + 400;
                 break;
+            case 3:
+                stoneImage.x = canvas.width + 10;
+                stoneImage2.x = canvas.width + 400;
+                break;
             
         default:
         }
     }
     
-    function getRandomInt () {
+    function getRandomInt (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 })();
