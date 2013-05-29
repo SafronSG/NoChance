@@ -19,8 +19,8 @@
     var stoneImage2;
     var hallWay;
     var player;
-    var nextStone = STONE_TIME;
-    var stonesArray;
+    var startJump = false;
+    var jumping = 15;
     
 
     function initialize() {
@@ -63,7 +63,7 @@
 
         // Set up looping
         ss.getAnimation("run").next = "run";
-        ss.getAnimation("jump").next = "run";
+        //ss.getAnimation("jump").next = "run";
         player.gotoAndPlay("run");
 
 
@@ -128,7 +128,7 @@
     }
     
     function handleJumpStart() {
-        player.gotoAndPlay("jump");
+        startJump = true;
     }
 
     function tick() {
@@ -139,6 +139,19 @@
         stoneImage2.x = stoneImage2.x - 10;
         if (stoneImage2.x < -40) {
             addstones(2);
+        }
+        if (startJump) {
+            if (jumping > 0) {
+                player.y = player.y - 5;
+                jumping--;
+            }
+            else if (jumping<=0 && jumping>-15) {
+                player.y = player.y + 5;
+                jumping--;
+            } else {
+                startJump = false;
+                jumping = 15;
+            }
         }
         
         stage.update();
@@ -151,7 +164,7 @@
                 break;
             case 2:
                 stoneImage.x = canvas.width + 10;
-                stoneImage2.x = canvas.width + 200;
+                stoneImage2.x = canvas.width + 400;
                 break;
             
         default:
