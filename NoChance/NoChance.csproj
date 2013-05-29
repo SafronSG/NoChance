@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\default.css" />
+    <Content Include="images\HallWay.png" />
     <Content Include="images\PlayerJump.png" />
     <Content Include="images\PlayerRun.png" />
     <Content Include="images\StartButton.png" />

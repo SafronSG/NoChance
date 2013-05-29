@@ -14,6 +14,7 @@
     var canvas, context, stage;
     var titleImage, titleBitmap;
     var startButtonImage, startButtonBitmap;
+    var hallWay;
 
     function initialize() {
 	canvas = document.getElementById("canvas");
@@ -30,6 +31,7 @@
             { id: "playerRun", src: "images/PlayerRun.png" },
             { id: "playerJump", src: "images/PlayerJump.png" },
 	        { id: "startButton", src: "images/StartButton.png" },
+	        { id: "hallWay", src: "images/HallWay.png" },
             { id: "title", src: "images/Title.png" }
         ];
 
@@ -39,7 +41,12 @@
 
     function prepareGame() {
     
-        new Graphics().beginFill("rgba(0,0,255,1)").rect(0, 0, canvas.width, canvas.height/3);
+        hallWay = new createjs.Shape();
+        var g = hallWay.graphics;
+        g.beginBitmapFill(preload.getResult("hallWay").result);
+        g.drawRect(0, 0, canvas.width + 330, 300);
+        hallWay.y = 200;
+        stage.addChild(hallWay);
 
 	    titleImage = preload.getResult("title").result;
         titleBitmap = new createjs.Bitmap(titleImage);
