@@ -16,6 +16,8 @@
     var titleImage, titleBitmap;
     var startButtonImage, startButtonBitmap;
     var hallWay;
+    var player;
+    var runningRate = 2.5;
 
     function initialize() {
 	    canvas = document.getElementById("canvas");
@@ -26,9 +28,9 @@
 	    stage = new createjs.Stage(canvas);
 	    assets = [];
 	    var manifest = [
-                { id: "playerRun", src: "images/PlayerRun.png" },
-                { id: "playerJump", src: "images/PlayerJump.png" },
+                { id: "playerRun", src: "images/runningGrant.png" },
 	            { id: "startButton", src: "images/StartButton.png" },
+	            { id: "hallWay", src: "images/HallWay.png" },
 	            { id: "hallWay", src: "images/HallWay.png" },
                 { id: "title", src: "images/Title.png" }
             ];
@@ -49,11 +51,23 @@
 
     function handleComplete() {
     
-        var txt = new createjs.Text(assets.length, "15px Arial", "#000");
-        txt.y = 150;
-        stage.addChild(txt);
+        var spriteSheet = { "animations": { "run": [0, 25], "jump": [26, 63] }, "images": ["images/runningGrant.png"], "frames": { "regX": 0, "height": 292.5, "count": 64, "regY": 0, "width": 165.75 } };
 
-        stage.update();
+        var ss = new createjs.SpriteSheet(spriteSheet);
+        player = new createjs.BitmapAnimation(ss);
+
+        // Set up looping
+        ss.getAnimation("run").next = "run";
+        ss.getAnimation("jump").next = "run";
+        //player.gotoAndPlay("run");
+
+
+        // Position the Grant sprite
+        player.x = 100;
+        player.y = 363;
+        player.scaleX = player.scaleY = 0.3;
+        
+        
         for (var i = 0; i < assets.length; i++) {
             
             var item = assets[i];
@@ -82,40 +96,29 @@
                     startButtonImage.y = canvas.height - 100;
                     startButtonImage.x = canvas.width / 2 - 107;
                     break;
-                case "hill2":
-                    hill2 = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0, 0, 212, 50));
-                    hill2.x = Math.random() * w;
-                    hill2.scaleX = hill2.scaleY = 3;
-                    hill2.y = 171;
-                    break;
             }
         }
 
-        stage.addChild(startButtonImage, titleImage, hallWay);
+        stage.addChild(startButtonImage, titleImage, hallWay, player);
 
+        
+        stage.addEventListener("stagemousedown", handleJumpStart);
+        
+        createjs.Ticker.setFPS(40);
+        if (!createjs.Ticker.hasEventListener("tick")) {
+            createjs.Ticker.addEventListener("tick", tick);
+        }
+        
         stage.update();
-        //stage.addEventListener("stagemousedown", handleJumpStart);
-        //canvas.onclick = handleClick;
-        //createjs.Ticker.setFPS(40);
-        //createjs.Ticker.addEventListener("tick", tick);
-        
-        
     }
-
-    function handleClick() {
-        //prevent extra clicks and hide text
-        canvas.onclick = null;
-
-    }
+    
     function handleJumpStart() {
+        player.gotoAndPlay("jump");
     }
 
-    function tick(event) {
+    function tick() {
+        //hallWay.x = (hallWay.x - 10) % 330;
         
-        var outside = w + 20;
-
-        hallWay.x = (hallWay.x - 15) % 330;
-        
-        update(event);
+        stage.update();
     }
 })();
