@@ -20,6 +20,7 @@
     var hallWay;
     var player;
     var nextStone = STONE_TIME;
+    var stonesArray;
     
 
     function initialize() {
@@ -131,27 +132,29 @@
     }
 
     function tick() {
-        //handle firing
-        if (nextStone <= 0) {
-            nextStone = STONE_TIME;
-            addStones();
-        } else {
-            nextStone--;
-        }
 
         hallWay.x = (hallWay.x - 10) % 330;
+
+        stoneImage.x = stoneImage.x - 10;
+        stoneImage2.x = stoneImage2.x - 10;
+        if (stoneImage2.x < -40) {
+            addstones(2);
+        }
         
         stage.update();
     }
-
-    function addStones() {
-        var tmp = getRandomInt(1, 2)
-        switch (tmp) {
+    
+    function addstones(id) {
+        switch (id) {
             case 1:
-                
+                stoneImage.x = stoneImage2.x = canvas.width + 10;
                 break;
             case 2:
+                stoneImage.x = canvas.width + 10;
+                stoneImage2.x = canvas.width + 200;
                 break;
+            
+        default:
         }
     }
     
