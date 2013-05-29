@@ -57,6 +57,15 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\default.css" />
+    <Content Include="images\PlayerJump.png" />
+    <Content Include="images\PlayerRun.png" />
+    <Content Include="images\StartButton.png" />
+    <Content Include="images\Title.png" />
+    <Content Include="index.html" />
+    <Content Include="js\CreateJS\easeljs-0.5.0.min.js" />
+    <Content Include="js\CreateJS\preloadjs-0.2.0.min.js" />
+    <Content Include="js\game.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

@@ -7,7 +7,7 @@
     document.addEventListener("DOMContentLoaded", initialize, false);
 
     // THE GAME
-    var scaleW = window.innerWidth / 1366;
+    var scaleW = window.innerWidth / 1280;
     var scaleH = window.innerHeight / 768;
 
     var preload;
@@ -17,8 +17,8 @@
 
     function initialize() {
 	canvas = document.getElementById("canvas");
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth - 30;
+        canvas.height = window.innerHeight - 30;
         context = canvas.getContext("2d");
 
 	stage = new createjs.Stage(canvas);
@@ -29,7 +29,7 @@
 	var manifest = [
             { id: "playerRun", src: "images/PlayerRun.png" },
             { id: "playerJump", src: "images/PlayerJump.png" },
-	    { id: "startButton", src: "images/StartButton.png" },
+	        { id: "startButton", src: "images/StartButton.png" },
             { id: "title", src: "images/Title.png" }
         ];
 
@@ -38,21 +38,23 @@
     }
 
     function prepareGame() {
+    
+        new Graphics().beginFill("rgba(0,0,255,1)").rect(0, 0, canvas.width, canvas.height/3);
 
-	titleImage = preload.getResult("title").result;
+	    titleImage = preload.getResult("title").result;
         titleBitmap = new createjs.Bitmap(titleImage);
-        titleBitmap.y = 200;
-        titleBitmap.x = 10;
+        titleBitmap.y = 20;
+        titleBitmap.x = canvas.width / 2 - 277;
         stage.addChild(titleBitmap);
 
-	startButtonImage = preload.getResult("startButton").result;
+	    startButtonImage = preload.getResult("startButton").result;
         startButtonBitmap = new createjs.Bitmap(startButtonImage);
-        startButtonBitmap.y = 300;
-        startButtonBitmap.x = 10;
+        startButtonBitmap.y = canvas.height - 100;
+        startButtonBitmap.x = canvas.width / 2 - 107;
         stage.addChild(startButtonBitmap);
 
-//Text
-        var txt = new createjs.Text("Hello CreateJS!", "15px Arial", "#000");
+        //debugText
+        var txt = new createjs.Text(window.innerWidth + ":" + window.innerHeight, "15px Arial", "#000");
         txt.y = 150;
         stage.addChild(txt);
         
